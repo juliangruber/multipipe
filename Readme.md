@@ -2,9 +2,9 @@
 
 A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place.
 
-## Example
-
 [![build status](https://secure.travis-ci.org/segmentio/multipipe.png)](http://travis-ci.org/segmentio/multipipe)
+
+## Example
 
 ```js
 var pipe = require('multipipe');
