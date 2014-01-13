@@ -1,7 +1,8 @@
-
 # multipipe
 
-A better `Stream.pipe` that creates duplex streams and lets you handle errors in one place.
+A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place.
+
+## Example
 
 ```js
 var pipe = require('multipipe');
