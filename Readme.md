@@ -59,7 +59,7 @@ c.emit('error', new Error);
 
 Pass a variable number of streams and each will be piped to the next one.
 
-A stream will be returned that wraps passed in streams in a way that errors will be forwarded and you can write and/or write from it.
+A stream will be returned that wraps passed in streams in a way that errors will be forwarded and you can write to and/or read from it.
 
 ## Installation
 
