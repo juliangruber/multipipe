@@ -3,17 +3,18 @@
 
 A better `Stream.pipe` that creates duplex streams and lets you handle errors in one place.
 
-## API
-
 ```js
 var pipe = require('multipipe');
+
+// pipe streams
+var stream = pipe(streamA, streamB, streamC);
+
+// centralized error handling
+stream.on('error', fn);
+
+// creates a new stream
+source.pipe(stream).pipe(dest);
 ```
-
-### pipe(stream, ...)
-
-Pass a variable number of streams and each will be piped to the next one.
-
-A stream will be returned that wraps passed in streams in a way that errors will be forwarded and you can write and/or write from it.
 
 ## Duplex streams
 
@@ -54,6 +55,10 @@ c.emit('error', new Error);
 ## API
 
 ### pipe(stream, ...)
+
+Pass a variable number of streams and each will be piped to the next one.
+
+A stream will be returned that wraps passed in streams in a way that errors will be forwarded and you can write and/or write from it.
 
 ## Installation
 
