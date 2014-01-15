@@ -37,10 +37,10 @@ describe('pipe(a, b, c)', function(){
   });
   
   it('should aggregate errors', function(done){
-    var readable = Readable();
-    var transform = Transform();
-    var writable = Writable();
-    var stream = pipe(readable, transform, writable);
+    var a = Transform();
+    var b = Transform();
+    var c = Transform();
+    var stream = pipe(a, b, c);
     var err = new Error;
     var i = 0;
     
@@ -51,9 +51,9 @@ describe('pipe(a, b, c)', function(){
       if (i == 3) done();
     });
     
-    readable.emit('error', err);
-    transform.emit('error', err);
-    writable.emit('error', err);
+    a.emit('error', err);
+    b.emit('error', err);
+    c.emit('error', err);
   });
 });
 
