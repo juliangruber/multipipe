@@ -44,6 +44,8 @@ describe('pipe(a, b, c)', function(){
     var err = new Error;
     var i = 0;
     
+    assert(stream instanceof Stream.Duplex)
+    
     stream.on('error', function(_err){
       i++;
       assert.equal(_err, err);
