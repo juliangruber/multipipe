@@ -45,8 +45,10 @@ describe('pipe(a, b, c)', function(){
     var i = 0;
     
     stream.on('error', function(_err){
+      i++;
       assert.equal(_err, err);
-      if (++i == 3) done();
+      assert(i <= 3);
+      if (i == 3) done();
     });
     
     readable.emit('error', err);
