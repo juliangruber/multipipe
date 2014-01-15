@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -33,7 +32,8 @@ function pipe(){
   var last = streams[streams.length - 1];
   var ret;
   
-  if (first.writable && last.readable) ret = duplexer(first, last);
+  if (first.writable && last.readable)
+    ret = duplexer({ bubbleErrors: false }, first, last);
   else if (first.writable) ret = first;
   else if (last.readable) ret = last;
   else ret = new Stream;
