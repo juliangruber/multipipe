@@ -35,25 +35,48 @@ describe('pipe(a, b, c)', function(){
     .pipe(stream)
     .pipe(Writable(done));
   });
-  
-  it('should aggregate errors', function(done){
-    var a = Transform();
-    var b = Transform();
-    var c = Transform();
-    var stream = pipe(a, b, c);
-    var err = new Error;
-    var i = 0;
-    
-    stream.on('error', function(_err){
-      i++;
-      assert.equal(_err, err);
-      assert(i <= 3);
-      if (i == 3) done();
+ 
+  describe('errors', function(){
+    it('should reemit', function(done){
+      var a = Transform();
+      var b = Transform();
+      var c = Transform();
+      var stream = pipe(a, b, c);
+      var err = new Error;
+      var i = 0;
+      
+      stream.on('error', function(_err){
+        i++;
+        assert.equal(_err, err);
+        assert(i <= 3);
+        if (i == 3) done();
+      });
+      
+      a.emit('error', err);
+      b.emit('error', err);
+      c.emit('error', err);
     });
-    
-    a.emit('error', err);
-    b.emit('error', err);
-    c.emit('error', err);
+
+    it('should not reemit endlessly', function(done){
+      var a = Transform();
+      var b = Transform();
+      var c = Transform();
+      c.readable = false;
+      var stream = pipe(a, b, c);
+      var err = new Error;
+      var i = 0;
+      
+      stream.on('error', function(_err){
+        i++;
+        assert.equal(_err, err);
+        assert(i <= 3);
+        if (i == 3) done();
+      });
+      
+      a.emit('error', err);
+      b.emit('error', err);
+      c.emit('error', err);
+    });
   });
 });
 

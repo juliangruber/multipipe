@@ -49,7 +49,7 @@ function pipe(){
   streams.forEach(function(stream, i){
     var next = streams[i+1];
     if (next) stream.pipe(next);
-    stream.on('error', ret.emit.bind(ret, 'error'));
+    if (stream != ret) stream.on('error', ret.emit.bind(ret, 'error'));
   });
 
   return ret;
