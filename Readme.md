@@ -17,6 +17,11 @@ stream.on('error', fn);
 
 // creates a new stream
 source.pipe(stream).pipe(dest);
+
+// optional callback on finish or error
+pipe(streamA, streamB, streamC, function(err){
+  // ...
+});
 ```
 
 ## Duplex streams
@@ -62,6 +67,8 @@ c.emit('error', new Error);
 Pass a variable number of streams and each will be piped to the next one.
 
 A stream will be returned that wraps passed in streams in a way that errors will be forwarded and you can write to and/or read from it.
+
+Pass a function as last argument to be called on `error` or `finish` of the last stream.
 
 ## Installation
 
