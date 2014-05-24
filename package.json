@@ -1,6 +1,6 @@
 {
   "name": "multipipe",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "pipe streams with centralized error handling",
   "repository": "segmentio/multipipe",
   "dependencies": {
