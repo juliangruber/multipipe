@@ -4,7 +4,7 @@
   "description": "pipe streams with centralized error handling",
   "repository": "segmentio/multipipe",
   "dependencies": {
-    "duplexer2": "0.0.1"
+    "duplexer2": "0.0.2"
   },
   "devDependencies": {
     "mocha": "~1.17.0"
