@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "description": "pipe streams with centralized error handling",
   "license": "MIT",
-  "repository": "segmentio/multipipe",
+  "repository": "juliangruber/multipipe",
   "dependencies": {
     "duplexer2": "0.0.2"
   },
