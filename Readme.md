@@ -3,6 +3,7 @@
 A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place.
 
 [![build status](https://secure.travis-ci.org/juliangruber/multipipe.png)](http://travis-ci.org/segmentio/juliangruber)
+[![downloads](https://img.shields.io/npm/dm/multipipe.svg)](https://www.npmjs.org/package/multipipe)
 
 ## Example
 
