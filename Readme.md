@@ -2,7 +2,7 @@
 
 A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place.
 
-[![build status](https://secure.travis-ci.org/segmentio/multipipe.png)](http://travis-ci.org/segmentio/multipipe)
+[![build status](https://secure.travis-ci.org/juliangruber/multipipe.png)](http://travis-ci.org/segmentio/juliangruber)
 
 ## Example
 
