@@ -17,7 +17,8 @@ var slice = [].slice;
  */
 
 var opts = {
-  bubbleErrors: false
+  bubbleErrors: false,
+  objectMode: true
 };
 
 /**
