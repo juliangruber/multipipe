@@ -125,6 +125,20 @@ describe('pipe(a, b, c, fn)', function(){
 
     c.destroy();
   });
+
+  it('should call on destroy with error', function(done){
+    var a = Readable();
+    var b = Transform();
+    var c = through();
+    var err = new Error;
+
+    pipe(a, b, c, function(_err){
+      assert.equal(_err, err);
+      done();
+    });
+
+    c.destroy(err);
+  });
 });
 
 function Readable(){
