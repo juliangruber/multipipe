@@ -61,6 +61,7 @@ function pipe(){
     var ended = false;
     ret.on('error', end);
     last.on('finish', end);
+    last.on('close', end);
     function end(err){
       if (ended) return;
       ended = true;

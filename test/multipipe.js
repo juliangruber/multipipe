@@ -1,6 +1,7 @@
 var assert = require('assert');
 var pipe = require('..');
 var Stream = require('stream');
+var through = require('through2');
 
 describe('pipe(a)', function(){
   it('should return a', function(){
@@ -110,6 +111,19 @@ describe('pipe(a, b, c, fn)', function(){
     a.emit('error', err);
     b.emit('error', err);
     c.emit('error', err);
+  });
+
+  it('should call on destroy', function(done){
+    var a = Readable();
+    var b = Transform();
+    var c = through();
+
+    pipe(a, b, c, function(err){
+      assert(!err);
+      done();
+    });
+
+    c.destroy();
   });
 });
 
