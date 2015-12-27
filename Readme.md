@@ -71,6 +71,10 @@ A stream will be returned that wraps passed in streams in a way that errors will
 
 Pass a function as last argument to be called on `error` or `finish` of the last stream.
 
+### pipe(streams[, cb])
+
+You can also pass an `Array` of streams if that is more convenient.
+
 ## Installation
 
 ```bash

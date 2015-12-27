@@ -30,15 +30,18 @@ module.exports = pipe;
 /**
  * Pipe.
  *
- * @param {Stream,...,[Function]}
+ * @param streams Array[Stream,...]
+ * @param cb [Function]
  * @return {Stream}
  * @api public
  */
 
-function pipe(){
-  if (arguments.length == 1) return arguments[0];
-  var streams = slice.call(arguments);
-  var cb;
+function pipe(streams, cb){
+  if (!Array.isArray(streams)) {
+    streams = slice.call(arguments);
+    cb = null;
+  }
+
   if ('function' == typeof streams[streams.length - 1]) {
     cb = streams.splice(-1)[0];
   }
@@ -47,6 +50,7 @@ function pipe(){
   var ret;
   
   if (first.writable && last.readable) ret = duplexer(opts, first, last);
+  else if (streams.length == 1) ret = streams[0];
   else if (first.writable) ret = first;
   else if (last.readable) ret = last;
   else ret = new Stream;
