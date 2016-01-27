@@ -8,7 +8,7 @@
     "duplexer2": "^0.1.2"
   },
   "devDependencies": {
-    "mocha": "2.4.2",
+    "mocha": "2.4.3",
     "through2": "^2.0.0"
   },
   "scripts": {
