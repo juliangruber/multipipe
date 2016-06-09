@@ -48,6 +48,11 @@ function pipe(streams, cb){
   var first = streams[0];
   var last = streams[streams.length - 1];
   var ret;
+
+  if (!first) {
+    if (cb) process.nextTick(cb);
+    return new Stream;
+  }
   
   if (first.writable && last.readable) ret = duplexer(opts, first, last);
   else if (streams.length == 1) ret = streams[0];

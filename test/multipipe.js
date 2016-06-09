@@ -3,6 +3,12 @@ var pipe = require('..');
 var Stream = require('stream');
 var through = require('through2');
 
+describe('pipe()', function(){
+  it('should return a stream', function(done){
+    assert(pipe(done));
+  });
+});
+
 describe('pipe(a)', function(){
   it('should return a', function(){
     var readable = Readable();
