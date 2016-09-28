@@ -5,7 +5,8 @@
   "license": "MIT",
   "repository": "juliangruber/multipipe",
   "dependencies": {
-    "duplexer2": "^0.1.2"
+    "duplexer2": "^0.1.2",
+    "object-assign": "^4.1.0"
   },
   "devDependencies": {
     "mocha": "^3.0.0",

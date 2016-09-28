@@ -6,6 +6,7 @@
 var duplexer = require('duplexer2');
 var PassThrough = require('stream').PassThrough;
 var Readable = require('stream').PassThrough;
+var objectAssign = require('object-assign');
 
 /**
  * Slice reference.
@@ -56,7 +57,7 @@ function pipe(streams, opts, cb){
   var first = streams[0];
   var last = streams[streams.length - 1];
   var ret;
-  opts = Object.assign({}, defaultOpts, opts)
+  opts = objectAssign({}, defaultOpts, opts)
 
   if (!first) {
     if (cb) process.nextTick(cb);
