@@ -5,6 +5,6 @@ node_modules: package.json
 test:
 	@./node_modules/.bin/mocha \
 		--reporter spec \
-		--timeout 100
+		--timeout 200
 
 .PHONY: test
