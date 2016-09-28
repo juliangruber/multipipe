@@ -7,13 +7,18 @@ describe('pipe()', function(){
   it('should return a stream', function(done){
     assert(pipe(done));
   });
+  it('should accept options', function(){
+    assert.equal(pipe({ objectMode: false })._readableState.objectMode, false)
+  });
 });
 
 describe('pipe(a)', function(){
-  it('should return a', function(){
-    var readable = Readable();
-    var stream = pipe(readable);
-    assert.equal(stream, readable);
+  it('should pass through to a', function(done){
+    Readable().pipe(pipe(Transform())).pipe(Writable(done))
+  });
+  it('should accept options', function(){
+    var readable = Readable({ objectMode: true });
+    assert.equal(pipe(readable, { objectMode: false })._readableState.objectMode, false)
   });
 });
 
@@ -85,6 +90,12 @@ describe('pipe(a, b, c)', function(){
       c.emit('error', err);
     });
   });
+  it('should accept options', function(){
+    var a = Readable()
+    var b = Transform()
+    var c = Writable()
+    assert.equal(pipe(a, b, c, { objectMode: false })._readableState.objectMode, false)
+  });
 });
 
 describe('pipe(a, b, c, fn)', function(){
@@ -145,6 +156,13 @@ describe('pipe(a, b, c, fn)', function(){
 
     c.destroy(err);
   });
+
+  it('should accept options', function(done){
+    var a = Readable()
+    var b = Transform()
+    var c = Writable()
+    assert.equal(pipe(a, b, c, { objectMode: false }, done)._readableState.objectMode, false)
+  });
 });
 
 function Readable(){
@@ -169,7 +187,7 @@ function Writable(cb){
   writable._write = function(chunk, _, done){
     assert.equal(chunk, 'A');
     done();
-    cb();
+    cb && cb();
   };
   return writable;
 }
