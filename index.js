@@ -79,8 +79,8 @@ function pipe(streams, opts, cb){
   if (cb) {
     var ended = false;
     ret.on('error', end);
-    last.on('finish', end);
-    last.on('close', end);
+    last.on('finish', function(){ end() });
+    last.on('close', function(){ end() });
     function end(err){
       if (ended) return;
       ended = true;

@@ -163,6 +163,14 @@ describe('pipe(a, b, c, fn)', function(){
     var c = Writable()
     assert.equal(pipe(a, b, c, { objectMode: false }, done)._readableState.objectMode, false)
   });
+
+  it('should ignore parameters on non error events', function(done){
+    var a = Readable();
+    var b = Transform();
+    var c = Writable();
+    pipe(a, b, c, done);
+    c.emit('finish', true);
+  });
 });
 
 function Readable(){
