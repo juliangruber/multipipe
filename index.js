@@ -5,7 +5,7 @@
 
 var duplexer = require('duplexer2');
 var PassThrough = require('stream').PassThrough;
-var Readable = require('stream').PassThrough;
+var Readable = require('stream').Readable;
 var objectAssign = require('object-assign');
 
 /**
