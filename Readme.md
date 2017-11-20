@@ -68,7 +68,7 @@ c.emit('error', new Error)
 
 ## API
 
-### pipe(stream, ...)
+### pipe(stream...[, opts][, cb])
 
 Pass a variable number of streams and each will be piped to the next one.
 
