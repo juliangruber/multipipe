@@ -10,9 +10,11 @@
   },
   "devDependencies": {
     "mocha": "^3.0.0",
+    "prettier-standard": "^7.0.3",
+    "standard": "^10.0.3",
     "through2": "^2.0.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "prettier-standard '*.js' 'test/*.js' && standard && make test"
   }
 }
