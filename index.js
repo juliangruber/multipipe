@@ -2,31 +2,17 @@
  * Module dependencies.
  */
 
-var duplexer = require('duplexer2')
-var PassThrough = require('stream').PassThrough
-var Readable = require('stream').Readable
-var objectAssign = require('object-assign')
-
-/**
- * Slice reference.
- */
-
-var slice = [].slice
+const duplexer = require('duplexer2')
+const { PassThrough, Readable } = require('stream')
 
 /**
  * Duplexer options.
  */
 
-var defaultOpts = {
+const defaultOpts = {
   bubbleErrors: false,
   objectMode: true
 }
-
-/**
- * Expose `pipe`.
- */
-
-module.exports = pipe
 
 /**
  * Pipe.
@@ -38,25 +24,26 @@ module.exports = pipe
  * @api public
  */
 
-function pipe (streams, opts, cb) {
-  if (!Array.isArray(streams)) {
-    streams = slice.call(arguments)
-    opts = null
-    cb = null
+const pipe = (...streams) => {
+  let opts, cb
+
+  if (Array.isArray(streams[0])) {
+    streams = streams[0]
+  }
+  if (typeof streams[streams.length - 1] === 'function') {
+    cb = streams.pop()
+  }
+  if (
+    typeof streams[streams.length - 1] === 'object' &&
+    typeof streams[streams.length - 1].pipe !== 'function'
+  ) {
+    opts = streams.pop()
   }
 
-  var lastArg = streams[streams.length - 1]
-  if (typeof lastArg === 'function') {
-    cb = streams.splice(-1)[0]
-    lastArg = streams[streams.length - 1]
-  }
-  if (typeof lastArg === 'object' && typeof lastArg.pipe !== 'function') {
-    opts = streams.splice(-1)[0]
-  }
-  var first = streams[0]
-  var last = streams[streams.length - 1]
-  var ret
-  opts = objectAssign({}, defaultOpts, opts)
+  const first = streams[0]
+  const last = streams[streams.length - 1]
+  let ret
+  opts = Object.assign({}, defaultOpts, opts)
 
   if (!first) {
     if (cb) process.nextTick(cb)
@@ -69,28 +56,29 @@ function pipe (streams, opts, cb) {
   else if (last.readable) ret = last
   else ret = new PassThrough(opts)
 
-  streams.forEach(function (stream, i) {
-    var next = streams[i + 1]
+  for (const [i, stream] of streams.entries()) {
+    const next = streams[i + 1]
     if (next) stream.pipe(next)
-    if (stream !== ret) stream.on('error', ret.emit.bind(ret, 'error'))
-  })
-
-  function end (err) {
-    if (ended) return
-    ended = true
-    cb(err)
+    if (stream !== ret) stream.on('error', err => ret.emit('error', err))
   }
 
   if (cb) {
-    var ended = false
+    let ended = false
+    const end = err => {
+      if (ended) return
+      ended = true
+      cb(err)
+    }
     ret.on('error', end)
-    last.on('finish', function () {
-      end()
-    })
-    last.on('close', function () {
-      end()
-    })
+    last.on('finish', () => end())
+    last.on('close', () => end())
   }
 
   return ret
 }
+
+/**
+ * Expose `pipe`.
+ */
+
+module.exports = pipe

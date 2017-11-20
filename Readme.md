@@ -8,21 +8,21 @@ A better `Stream#pipe` that creates duplex streams and lets you handle errors in
 ## Example
 
 ```js
-var pipe = require('multipipe');
+const pipe = require('multipipe')
 
 // pipe streams
-var stream = pipe(streamA, streamB, streamC);
+const stream = pipe(streamA, streamB, streamC)
 
 // centralized error handling
-stream.on('error', fn);
+stream.on('error', fn)
 
 // creates a new stream
-source.pipe(stream).pipe(dest);
+source.pipe(stream).pipe(dest)
 
 // optional callback on finish or error
-pipe(streamA, streamB, streamC, function(err){
+pipe(streamA, streamB, streamC, err => {
   // ...
-});
+})
 
 // pass options
 pipe(streamA, streamB, streamC, {
@@ -35,11 +35,11 @@ pipe(streamA, streamB, streamC, {
   Write to the pipe and you'll really write to the first stream, read from the pipe and you'll read from the last stream.
 
 ```js
-var stream = pipe(a, b, c);
+const stream = pipe(a, b, c)
 
 source
   .pipe(stream)
-  .pipe(destination);
+  .pipe(destination)
 ```
 
   In this example the flow of data is:
@@ -55,15 +55,15 @@ source
   Each `pipe` forwards the errors the streams it wraps emit, so you have one central place to handle errors:
 
 ```js
-var stream = pipe(a, b, c);
+const stream = pipe(a, b, c)
 
-stream.on('error', function(err){
+stream.on('error', err => {
   // called three times
-});
+})
 
-a.emit('error', new Error);
-b.emit('error', new Error);
-c.emit('error', new Error);
+a.emit('error', new Error)
+b.emit('error', new Error)
+c.emit('error', new Error)
 ```
 
 ## API

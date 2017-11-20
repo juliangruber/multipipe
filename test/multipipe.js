@@ -1,27 +1,54 @@
 /* global describe, it */
 
-var assert = require('assert')
-var pipe = require('..')
-var Stream = require('stream')
-var through = require('through2')
+const assert = require('assert')
+const pipe = require('..')
+const Stream = require('stream')
+const through = require('through2')
 
-describe('pipe()', function () {
-  it('should return a stream', function (done) {
+const Readable = () => {
+  const readable = new Stream.Readable({ objectMode: true })
+  readable._read = function () {
+    this.push('a')
+    this.push(null)
+  }
+  return readable
+}
+
+const Transform = () => {
+  const transform = new Stream.Transform({ objectMode: true })
+  transform._transform = (chunk, _, done) => {
+    done(null, chunk.toUpperCase())
+  }
+  return transform
+}
+
+const Writable = cb => {
+  const writable = new Stream.Writable({ objectMode: true })
+  writable._write = (chunk, _, done) => {
+    assert.equal(chunk, 'A')
+    done()
+    cb && cb()
+  }
+  return writable
+}
+
+describe('pipe()', () => {
+  it('should return a stream', done => {
     assert(pipe(done))
   })
-  it('should accept options', function () {
+  it('should accept options', () => {
     assert.equal(pipe({ objectMode: false })._readableState.objectMode, false)
   })
 })
 
-describe('pipe(a)', function () {
-  it('should pass through to a', function (done) {
+describe('pipe(a)', () => {
+  it('should pass through to a', done => {
     Readable()
       .pipe(pipe(Transform()))
       .pipe(Writable(done))
   })
-  it('should accept options', function () {
-    var readable = Readable({ objectMode: true })
+  it('should accept options', () => {
+    const readable = Readable({ objectMode: true })
     assert.equal(
       pipe(readable, { objectMode: false })._readableState.objectMode,
       false
@@ -29,25 +56,25 @@ describe('pipe(a)', function () {
   })
 })
 
-describe('pipe(a, b, c)', function () {
-  it('should pipe internally', function (done) {
+describe('pipe(a, b, c)', () => {
+  it('should pipe internally', done => {
     pipe(Readable(), Transform(), Writable(done))
   })
 
-  it('should be writable', function (done) {
-    var stream = pipe(Transform(), Writable(done))
+  it('should be writable', done => {
+    const stream = pipe(Transform(), Writable(done))
     assert(stream.writable)
     Readable().pipe(stream)
   })
 
-  it('should be readable', function (done) {
-    var stream = pipe(Readable(), Transform())
+  it('should be readable', done => {
+    const stream = pipe(Readable(), Transform())
     assert(stream.readable)
     stream.pipe(Writable(done))
   })
 
-  it('should be readable and writable', function (done) {
-    var stream = pipe(Transform(), Transform())
+  it('should be readable and writable', done => {
+    const stream = pipe(Transform(), Transform())
     assert(stream.readable)
     assert(stream.writable)
     Readable()
@@ -55,16 +82,16 @@ describe('pipe(a, b, c)', function () {
       .pipe(Writable(done))
   })
 
-  describe('errors', function () {
-    it('should reemit', function (done) {
-      var a = Transform()
-      var b = Transform()
-      var c = Transform()
-      var stream = pipe(a, b, c)
-      var err = new Error()
-      var i = 0
+  describe('errors', () => {
+    it('should reemit', done => {
+      const a = Transform()
+      const b = Transform()
+      const c = Transform()
+      const stream = pipe(a, b, c)
+      const err = new Error()
+      let i = 0
 
-      stream.on('error', function (_err) {
+      stream.on('error', _err => {
         i++
         assert.equal(_err, err)
         assert(i <= 3)
@@ -76,14 +103,14 @@ describe('pipe(a, b, c)', function () {
       c.emit('error', err)
     })
 
-    it('should not reemit endlessly', function (done) {
-      var a = Transform()
-      var b = Transform()
-      var c = Transform()
+    it('should not reemit endlessly', done => {
+      const a = Transform()
+      const b = Transform()
+      const c = Transform()
       c.readable = false
-      var stream = pipe(a, b, c)
-      var err = new Error()
-      var i = 0
+      const stream = pipe(a, b, c)
+      const err = new Error()
+      let i = 0
 
       stream.on('error', function (_err) {
         i++
@@ -97,10 +124,10 @@ describe('pipe(a, b, c)', function () {
       c.emit('error', err)
     })
   })
-  it('should accept options', function () {
-    var a = Readable()
-    var b = Transform()
-    var c = Writable()
+  it('should accept options', () => {
+    const a = Readable()
+    const b = Transform()
+    const c = Writable()
     assert.equal(
       pipe(a, b, c, { objectMode: false })._readableState.objectMode,
       false
@@ -108,29 +135,29 @@ describe('pipe(a, b, c)', function () {
   })
 })
 
-describe('pipe(a, b, c, fn)', function () {
-  it('should call on finish', function (done) {
-    var finished = false
-    var a = Readable()
-    var b = Transform()
-    var c = Writable(function () {
+describe('pipe(a, b, c, fn)', () => {
+  it('should call on finish', done => {
+    let finished = false
+    const a = Readable()
+    const b = Transform()
+    const c = Writable(function () {
       finished = true
     })
 
-    pipe(a, b, c, function (err) {
+    pipe(a, b, c, err => {
       assert(!err)
       assert(finished)
       done()
     })
   })
 
-  it('should call with error once', function (done) {
-    var a = Readable()
-    var b = Transform()
-    var c = Writable()
-    var err = new Error()
+  it('should call with error once', done => {
+    const a = Readable()
+    const b = Transform()
+    const c = Writable()
+    const err = new Error()
 
-    pipe(a, b, c, function (err) {
+    pipe(a, b, c, err => {
       assert(err)
       done()
     })
@@ -140,12 +167,12 @@ describe('pipe(a, b, c, fn)', function () {
     c.emit('error', err)
   })
 
-  it('should call on destroy', function (done) {
-    var a = Readable()
-    var b = Transform()
-    var c = through()
+  it('should call on destroy', done => {
+    const a = Readable()
+    const b = Transform()
+    const c = through()
 
-    pipe(a, b, c, function (err) {
+    pipe(a, b, c, err => {
       assert(!err)
       done()
     })
@@ -153,13 +180,13 @@ describe('pipe(a, b, c, fn)', function () {
     c.destroy()
   })
 
-  it('should call on destroy with error', function (done) {
-    var a = Readable()
-    var b = Transform()
-    var c = through()
-    var err = new Error()
+  it('should call on destroy with error', done => {
+    const a = Readable()
+    const b = Transform()
+    const c = through()
+    const err = new Error()
 
-    pipe(a, b, c, function (_err) {
+    pipe(a, b, c, _err => {
       assert.equal(_err, err)
       done()
     })
@@ -167,48 +194,21 @@ describe('pipe(a, b, c, fn)', function () {
     c.destroy(err)
   })
 
-  it('should accept options', function (done) {
-    var a = Readable()
-    var b = Transform()
-    var c = Writable()
+  it('should accept options', done => {
+    const a = Readable()
+    const b = Transform()
+    const c = Writable()
     assert.equal(
       pipe(a, b, c, { objectMode: false }, done)._readableState.objectMode,
       false
     )
   })
 
-  it('should ignore parameters on non error events', function (done) {
-    var a = Readable()
-    var b = Transform()
-    var c = Writable()
+  it('should ignore parameters on non error events', done => {
+    const a = Readable()
+    const b = Transform()
+    const c = Writable()
     pipe(a, b, c, done)
     c.emit('finish', true)
   })
 })
-
-function Readable () {
-  var readable = new Stream.Readable({ objectMode: true })
-  readable._read = function () {
-    this.push('a')
-    this.push(null)
-  }
-  return readable
-}
-
-function Transform () {
-  var transform = new Stream.Transform({ objectMode: true })
-  transform._transform = function (chunk, _, done) {
-    done(null, chunk.toUpperCase())
-  }
-  return transform
-}
-
-function Writable (cb) {
-  var writable = new Stream.Writable({ objectMode: true })
-  writable._write = function (chunk, _, done) {
-    assert.equal(chunk, 'A')
-    done()
-    cb && cb()
-  }
-  return writable
-}
