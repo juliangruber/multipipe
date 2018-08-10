@@ -3,7 +3,7 @@
 A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place.
 
 [![build status](https://travis-ci.org/juliangruber/multipipe.svg?branch=master)](http://travis-ci.org/juliangruber/multipipe)
-[![downloads](https://img.shields.io/npm/dm/multipipe.svg)](https://www.npmjs.org/package/multipipe)
+[![downloads](https://img.shields.io/npm/dm/multipipe.svg)](https://www.npmjs.org/package/multipipe) [![Greenkeeper badge](https://badges.greenkeeper.io/juliangruber/multipipe.svg)](https://greenkeeper.io/)
 
 ## Example
 
