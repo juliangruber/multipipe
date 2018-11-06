@@ -12,7 +12,7 @@
     "mocha": "^5.2.0",
     "prettier-standard": "^8.0.1",
     "standard": "^11.0.1",
-    "through2": "^2.0.0"
+    "through2": "^3.0.0"
   },
   "scripts": {
     "test": "prettier-standard '*.js' 'test/*.js' && standard && mocha --reporter spec --timeout 300"
