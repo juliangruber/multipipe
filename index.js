@@ -10,7 +10,7 @@ const { PassThrough, Readable } = require('stream')
  */
 
 const defaultOpts = {
-  bubbleErrors: false,
+  bubbleErrors: true,
   objectMode: true
 }
 
