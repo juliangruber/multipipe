@@ -212,3 +212,20 @@ describe('pipe(a, b, c, fn)', () => {
     c.emit('finish', true)
   })
 })
+
+describe('pipe([a, b, c], fn)', () => {
+  it('should call on finish', done => {
+    let finished = false
+    const a = Readable()
+    const b = Transform()
+    const c = Writable(function () {
+      finished = true
+    })
+
+    pipe([a, b, c], err => {
+      assert(!err)
+      assert(finished)
+      done()
+    })
+  })
+})

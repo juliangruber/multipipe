@@ -27,17 +27,18 @@ const defaultOpts = {
 const pipe = (...streams) => {
   let opts, cb
 
-  if (Array.isArray(streams[0])) {
-    streams = streams[0]
-  }
   if (typeof streams[streams.length - 1] === 'function') {
     cb = streams.pop()
   }
   if (
     typeof streams[streams.length - 1] === 'object' &&
+    !Array.isArray(streams[streams.length - 1]) &&
     typeof streams[streams.length - 1].pipe !== 'function'
   ) {
     opts = streams.pop()
+  }
+  if (Array.isArray(streams[0])) {
+    streams = streams[0]
   }
 
   const first = streams[0]
