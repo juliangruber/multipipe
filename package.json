@@ -1,6 +1,6 @@
 {
   "name": "multipipe",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "pipe streams with centralized error handling",
   "license": "MIT",
   "repository": "juliangruber/multipipe",
