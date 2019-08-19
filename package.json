@@ -11,7 +11,7 @@
   "devDependencies": {
     "mocha": "^6.0.0",
     "prettier-standard": "^8.0.1",
-    "standard": "^13.0.1",
+    "standard": "^14.0.0",
     "through2": "^3.0.0"
   },
   "scripts": {
