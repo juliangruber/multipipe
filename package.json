@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "mocha": "^6.0.0",
-    "prettier-standard": "^12.0.0",
+    "prettier-standard": "^14.0.3",
     "standard": "^14.0.2",
     "through2": "^3.0.0"
   },
