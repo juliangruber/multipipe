@@ -53,10 +53,7 @@ describe('pipe(a)', () => {
   it('should accept options', () => {
     const readable = Readable({ objectMode: true })
     assert.strictEqual(
-      pipe(
-        readable,
-        { objectMode: false }
-      )._readableState.objectMode,
+      pipe(readable, { objectMode: false })._readableState.objectMode,
       false
     )
   })
@@ -64,36 +61,23 @@ describe('pipe(a)', () => {
 
 describe('pipe(a, b, c)', () => {
   it('should pipe internally', done => {
-    pipe(
-      Readable(),
-      Transform(),
-      Writable(done)
-    )
+    pipe(Readable(), Transform(), Writable(done))
   })
 
   it('should be writable', done => {
-    const stream = pipe(
-      Transform(),
-      Writable(done)
-    )
+    const stream = pipe(Transform(), Writable(done))
     assert(stream.writable)
     Readable().pipe(stream)
   })
 
   it('should be readable', done => {
-    const stream = pipe(
-      Readable(),
-      Transform()
-    )
+    const stream = pipe(Readable(), Transform())
     assert(stream.readable)
     stream.pipe(Writable(done))
   })
 
   it('should be readable and writable', done => {
-    const stream = pipe(
-      Transform(),
-      Transform()
-    )
+    const stream = pipe(Transform(), Transform())
     assert(stream.readable)
     assert(stream.writable)
     Readable()
@@ -106,11 +90,7 @@ describe('pipe(a, b, c)', () => {
       const a = Transform()
       const b = Transform()
       const c = Transform()
-      const stream = pipe(
-        a,
-        b,
-        c
-      )
+      const stream = pipe(a, b, c)
       const err = new Error()
       let i = 0
 
@@ -131,11 +111,7 @@ describe('pipe(a, b, c)', () => {
       const b = Transform()
       const c = Transform()
       c.readable = false
-      const stream = pipe(
-        a,
-        b,
-        c
-      )
+      const stream = pipe(a, b, c)
       const err = new Error()
       let i = 0
 
@@ -156,12 +132,7 @@ describe('pipe(a, b, c)', () => {
     const b = Transform()
     const c = Writable()
     assert.strictEqual(
-      pipe(
-        a,
-        b,
-        c,
-        { objectMode: false }
-      )._readableState.objectMode,
+      pipe(a, b, c, { objectMode: false })._readableState.objectMode,
       false
     )
   })
@@ -176,16 +147,11 @@ describe('pipe(a, b, c, fn)', () => {
       finished = true
     })
 
-    pipe(
-      a,
-      b,
-      c,
-      err => {
-        assert(!err)
-        assert(finished)
-        done()
-      }
-    )
+    pipe(a, b, c, err => {
+      assert(!err)
+      assert(finished)
+      done()
+    })
   })
 
   it('should call with error once', done => {
@@ -194,15 +160,10 @@ describe('pipe(a, b, c, fn)', () => {
     const c = Writable()
     const err = new Error()
 
-    pipe(
-      a,
-      b,
-      c,
-      err => {
-        assert(err)
-        done()
-      }
-    )
+    pipe(a, b, c, err => {
+      assert(err)
+      done()
+    })
 
     a.emit('error', err)
     b.emit('error', err)
@@ -214,15 +175,10 @@ describe('pipe(a, b, c, fn)', () => {
     const b = Transform()
     const c = through()
 
-    pipe(
-      a,
-      b,
-      c,
-      err => {
-        assert(!err)
-        done()
-      }
-    )
+    pipe(a, b, c, err => {
+      assert(!err)
+      done()
+    })
 
     c.destroy()
   })
@@ -233,15 +189,10 @@ describe('pipe(a, b, c, fn)', () => {
     const c = through()
     const err = new Error()
 
-    pipe(
-      a,
-      b,
-      c,
-      _err => {
-        assert.strictEqual(_err, err)
-        done()
-      }
-    )
+    pipe(a, b, c, _err => {
+      assert.strictEqual(_err, err)
+      done()
+    })
 
     c.destroy(err)
   })
@@ -251,13 +202,7 @@ describe('pipe(a, b, c, fn)', () => {
     const b = Transform()
     const c = Writable()
     assert.strictEqual(
-      pipe(
-        a,
-        b,
-        c,
-        { objectMode: false },
-        done
-      )._readableState.objectMode,
+      pipe(a, b, c, { objectMode: false }, done)._readableState.objectMode,
       false
     )
   })
@@ -266,12 +211,7 @@ describe('pipe(a, b, c, fn)', () => {
     const a = Readable()
     const b = Transform()
     const c = Writable()
-    pipe(
-      a,
-      b,
-      c,
-      done
-    )
+    pipe(a, b, c, done)
     c.emit('finish', true)
   })
 })
@@ -285,13 +225,40 @@ describe('pipe([a, b, c], fn)', () => {
       finished = true
     })
 
-    pipe(
-      [a, b, c],
-      err => {
-        assert(!err)
-        assert(finished)
-        done()
-      }
-    )
+    pipe([a, b, c], err => {
+      assert(!err)
+      assert(finished)
+      done()
+    })
+  })
+})
+
+describe('await pipe(a, b, c)', () => {
+  it('should resolve on finish', done => {
+    let finished = false
+    const a = Readable()
+    const b = Transform()
+    const c = Writable(function () {
+      finished = true
+    })
+
+    pipe(a, b, c).then(() => {
+      assert(finished)
+      done()
+    })
+  })
+
+  it('should reject on error', done => {
+    const a = Readable()
+    const b = Transform()
+    const c = Writable()
+    const err = new Error()
+
+    pipe(a, b, c).catch(_err => {
+      assert.strictEqual(_err, err)
+      done()
+    })
+
+    b.emit('error', err)
   })
 })

@@ -4,6 +4,7 @@
 
 const duplexer = require('duplexer2')
 const { PassThrough, Readable } = require('stream')
+const mergePromise = require('./lib/merge-promise')
 
 /**
  * Duplexer options.
@@ -41,21 +42,25 @@ const pipe = (...streams) => {
     streams = streams[0]
   }
 
-  const first = streams[0]
-  const last = streams[streams.length - 1]
+  let first = streams[0]
+  let last = streams[streams.length - 1]
   let ret
   opts = Object.assign({}, defaultOpts, opts)
 
   if (!first) {
-    if (cb) process.nextTick(cb)
-    return new PassThrough(opts)
+    ret = first = last = new PassThrough(opts)
+    process.nextTick(() => ret.end())
+  } else if (first.writable && last.readable) {
+    ret = duplexer(opts, first, last)
+  } else if (streams.length === 1) {
+    ret = new Readable(opts).wrap(streams[0])
+  } else if (first.writable) {
+    ret = first
+  } else if (last.readable) {
+    ret = last
+  } else {
+    ret = new PassThrough(opts)
   }
-
-  if (first.writable && last.readable) ret = duplexer(opts, first, last)
-  else if (streams.length === 1) ret = new Readable(opts).wrap(streams[0])
-  else if (first.writable) ret = first
-  else if (last.readable) ret = last
-  else ret = new PassThrough(opts)
 
   for (const [i, stream] of streams.entries()) {
     const next = streams[i + 1]
@@ -75,7 +80,14 @@ const pipe = (...streams) => {
     last.on('close', () => end())
   }
 
-  return ret
+  const createPromise = () =>
+    new Promise((resolve, reject) => {
+      ret.on('error', reject)
+      last.on('finish', resolve)
+      last.on('close', resolve)
+    })
+
+  return mergePromise(ret, createPromise)
 }
 
 /**

@@ -15,6 +15,6 @@
     "through2": "^3.0.0"
   },
   "scripts": {
-    "test": "prettier-standard '*.js' 'test/*.js' && standard && mocha --reporter spec --timeout 300"
+    "test": "prettier-standard '**/*.js' 'test/*.js' && standard && mocha --reporter spec --timeout 300"
   }
 }

@@ -1,6 +1,6 @@
 # multipipe
 
-A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place.
+A better `Stream#pipe` that creates duplex streams and lets you handle errors in one place. With promise support!
 
 [![build status](https://travis-ci.org/juliangruber/multipipe.svg?branch=master)](http://travis-ci.org/juliangruber/multipipe)
 [![downloads](https://img.shields.io/npm/dm/multipipe.svg)](https://www.npmjs.org/package/multipipe) [![Greenkeeper badge](https://badges.greenkeeper.io/juliangruber/multipipe.svg)](https://greenkeeper.io/)
@@ -28,6 +28,9 @@ pipe(streamA, streamB, streamC, err => {
 pipe(streamA, streamB, streamC, {
   objectMode: false
 })
+
+// await finish
+await pipe(streamA, streamB, streamC)
 ```
 
 ## Duplex streams
@@ -73,6 +76,8 @@ c.emit('error', new Error)
 Pass a variable number of streams and each will be piped to the next one.
 
 A stream will be returned that wraps passed in streams in a way that errors will be forwarded and you can write to and/or read from it.
+
+The returned stream is also a `Promise` that will resolve on finish and reject on error.
 
 Pass an object as the second to last or last argument to pass as `options` to the underlying stream constructors.
 
