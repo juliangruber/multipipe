@@ -9,7 +9,7 @@
     "object-assign": "^4.1.0"
   },
   "devDependencies": {
-    "mocha": "^7.0.1",
+    "mocha": "^10.2.0",
     "prettier-standard": "^16.0.0",
     "standard": "^14.0.2",
     "through2": "^3.0.0"
